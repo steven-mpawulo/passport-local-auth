@@ -1,5 +1,5 @@
 const User = require('../../models/User');
-const getUsers = async (req, res) => {
+const retreiveUsers = async (req, res) => {
     await User.find({}).then((users) => {
         console.log(users);
         if (users) {
@@ -13,4 +13,4 @@ const getUsers = async (req, res) => {
     });
 }
 
-module.exports = getUsers;
+module.exports = retreiveUsers;
