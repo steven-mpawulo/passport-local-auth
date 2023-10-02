@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const authRoute = express.Router();
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
@@ -11,14 +10,18 @@ passport.use(new LocalStrategy({
     usernameField: 'email'
 },
     async function (username, password, done) {
+        if (!username && !password) {
+            res.status(400).json({"message": "please provide email and password"});
+        }
         console.log(`username: ${username}, password: ${password}`);
         await User.findOne({ 'email': username }).then(async (user) => {
             console.log(user);
-            if (!user) { return done(null, false); }
+            if (!user) { return done(null, false);}
             const verifyPassword = await bcrypt.compare(password, user.password);
             if (!verifyPassword) { return done(null, false); }
             return done(null, user);
         }).catch((e) => {
+            console.log(e);
             if (e) { return done(e); }
         });
     }
@@ -68,6 +71,13 @@ authRoute.post('/signup', async (req, res) => {
         res.status(400).json({ "message": "something went wrong", "error": e });
     });
 
+});
+
+authRoute.post('/logout', (req, res, next) => {
+    req.logOut(function (err) {
+        if (err) {next(err);}
+        res.json({"message": "user logged out", "user": req.user});
+    });
 });
 
 
