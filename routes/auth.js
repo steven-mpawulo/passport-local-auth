@@ -4,9 +4,9 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
-const signup = require('../controllers/signup');
-const logOut = require('../controllers/logout');
-const login = require('../controllers/login');
+const signup = require('../controllers/auth/signup');
+const logOut = require('../controllers/auth//logout');
+const login = require('../controllers/auth/login');
 
 
 passport.use(new LocalStrategy({

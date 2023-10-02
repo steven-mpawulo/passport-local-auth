@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../../models/User');
 const bcrypt = require('bcrypt');
 const signup = async (req, res) => {
     const { email, password, userName } = req.body;
