@@ -13,19 +13,16 @@ passport.use(new LocalStrategy({
     usernameField: 'email'
 },
     async function (username, password, done) {
-        if (!username && !password) {
-            res.status(400).json({"message": "please provide email and password"});
-        }
         console.log(`username: ${username}, password: ${password}`);
         await User.findOne({ 'email': username }).then(async (user) => {
             console.log(user);
-            if (!user) { return done(null, false);}
+            if (!user) { return done(null, false, {message: "user not found"});}
             const verifyPassword = await bcrypt.compare(password, user.password);
-            if (!verifyPassword) { return done(null, false); }
+            if (!verifyPassword) { return done(null, false, {message: "incorrect password"}); }
             return done(null, user);
         }).catch((e) => {
             console.log(e);
-            if (e) { return done(e); }
+            if (e) { return done(e, {message: "something went wrong"}); }
         });
     }
 ));
