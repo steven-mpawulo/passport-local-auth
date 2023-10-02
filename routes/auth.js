@@ -4,6 +4,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const signup = require('../controllers/signup');
 
 
 passport.use(new LocalStrategy({
@@ -46,7 +47,7 @@ authRoute.post('/login', passport.authenticate('local'), (req, res) => {
     }
 });
 
-authRoute.post('/signup', );
+authRoute.post('/signup', signup);
 
 authRoute.post('/logout', (req, res, next) => {
     req.logOut(function (err) {
