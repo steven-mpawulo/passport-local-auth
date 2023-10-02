@@ -5,7 +5,8 @@ const LocalStrategy = require('passport-local');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const signup = require('../controllers/signup');
-const logOut = require('../controllers/logout')
+const logOut = require('../controllers/logout');
+const login = require('../controllers/login');
 
 
 passport.use(new LocalStrategy({
@@ -40,13 +41,7 @@ passport.serializeUser(function(user, cb) {
     });
   });
 
-authRoute.post('/login', passport.authenticate('local'), (req, res) => {
-    if (req.user) {
-        res.json({ "message": "user successfully logged in", "user": req.user });
-    } else {
-        res.json({ "message": "failed to login user" });
-    }
-});
+authRoute.post('/login', passport.authenticate('local'), login);
 
 authRoute.post('/signup', signup);
 

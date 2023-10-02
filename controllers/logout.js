@@ -1,4 +1,4 @@
-const logout = (req, res, next) => {
+const logOut = (req, res, next) => {
     req.logOut(function (err) {
         if (err) {next(err);}
         res.json({"message": "user logged out", "user": req.user});
