@@ -17,9 +17,9 @@ const createMatch = async (req, res) => {
                 console.log(newMatch);
                 if (newMatch) {
 
-                    await User.findByIdAndUpdate({ '_id': firstUserId }, { $addToSet: { "matchedTo": newMatch._id } }, { new: true }).then(async (firstUser) => {
+                    await User.findByIdAndUpdate({ '_id': firstUserId }, { $addToSet: { "matchedTo": secondUserId } }, { new: true }).then(async (firstUser) => {
                         console.log(firstUser);
-                        await User.findByIdAndUpdate({ '_id': secondUserId }, { $addToSet: { "matchedTo": newMatch._id } }, { new: true }).then((secondUser) => {
+                        await User.findByIdAndUpdate({ '_id': secondUserId }, { $addToSet: { "matchedTo": firstUserId } }, { new: true }).then((secondUser) => {
                             console.log(secondUser);
                             res.status(200).json({ "message": "match created", "match": newMatch, "firstUser": firstUser, "secondUser": secondUser });
                         }).catch((e) => {
