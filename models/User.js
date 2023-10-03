@@ -13,7 +13,10 @@ const userSchema = new mongoose.Schema({
     userName: {
         type: String,
         required: [true, "please provide user name"]
-    }
+    },
+    matchedTo: [{
+        type: mongoose.Types.ObjectId,
+    }],
 });
 
 module.exports = mongoose.model('passportAuthUser', userSchema);

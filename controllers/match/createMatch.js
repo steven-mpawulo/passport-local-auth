@@ -1,31 +1,46 @@
+const Match = require('../../models/Match');
+const User = require('../../models/User');
 const createMatch = async (req, res) => {
     const firstUserId = req.params.firstUserId;
     console.log(firstUserId);
     const secondUserId = req.params.secondUserId;
     console.log(secondUserId);
 
-    await Match.findOne({'between': {$all: [firstUserId, secondUserId]}}).then((match) => {
+    await Match.findOne({ 'between': { $all: [firstUserId, secondUserId] } }).then((match) => {
         if (match) {
-            res.status(400).json({"message": "match already exists"});
+            res.status(400).json({ "message": "match already exists" });
         } else {
             const match = new Match({
                 "between": [firstUserId, secondUserId]
             });
-            match.save().then((newMatch) => {
+            match.save().then(async (newMatch) => {
                 console.log(newMatch);
                 if (newMatch) {
-                    res.status(200).json({"message": "match created"});
+
+                    await User.findByIdAndUpdate({ '_id': firstUserId }, { $addToSet: { "matchedTo": newMatch._id } }, { new: true }).then(async (firstUser) => {
+                        console.log(firstUser);
+                        await User.findByIdAndUpdate({ '_id': secondUserId }, { $addToSet: { "matchedTo": newMatch._id } }, { new: true }).then((secondUser) => {
+                            console.log(secondUser);
+                            res.status(200).json({ "message": "match created", "match": newMatch, "firstUser": firstUser, "secondUser": secondUser });
+                        }).catch((e) => {
+                            console.log(e);
+                            res.status(400).json({ "message": "something went wrong", "error": e });
+                        });
+                    }).catch((e) => {
+                        console.log(e);
+                        res.status(400).json({ "message": "something went wrong", "error": e });
+                    });
                 } else {
-                    res.status(400).json({"message": "failed to save match"});
+                    res.status(400).json({ "message": "failed to save match" });
                 }
             }).catch((e) => {
                 console.log(e);
-                res.status(400).json({"message": "something went wrong", "error": e});
+                res.status(400).json({ "message": "something went wrong", "error": e });
             });
         }
     }).catch((e) => {
         console.log(e);
-        res.status(400).json({"message": "something went wrong"});
+        res.status(400).json({ "message": "something went wrong" });
     });
 }
 
