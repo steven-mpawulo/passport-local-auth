@@ -5,6 +5,6 @@ const deleteMatch = require('../controllers/match/deleteMatch');
 const matchRoute = express.Router();
 
 matchRoute.post('/:firstUserId/:secondUserId', createMatch);
-matchRoute.delete('/:firstUserId/:secondUserId', deleteMatch);
+matchRoute.delete('/:matchId/:firstUserId/:secondUserId', deleteMatch);
 
 module.exports = matchRoute;
